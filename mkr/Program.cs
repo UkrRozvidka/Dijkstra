@@ -7,6 +7,8 @@ namespace mkr
     {
         static void Main(string[] args)
         {
+
+
             var g = new Graph();
 
             for(int i = 1; i <=30; i++)
@@ -54,24 +56,55 @@ namespace mkr
             g.AddEdge("27", "28", 2);
 
             var dijkstra = new Dijkstra(g);
-            Console.WriteLine("Ведіть вершину з якої почати: ");
-            var startVertex = g.FindVertex(Console.ReadLine());
 
-            Console.WriteLine("Початкова вершина\tКінцева вершина\t\tДовжина маршруту\tМаршрут");
-            foreach (var endVertex in g.Vertices)
+
+            while (true)
             {
-                if (endVertex == startVertex) continue;
+                Console.WriteLine("Ведіть вершину з якої почати: ");
+                var startVertex = g.FindVertex(Console.ReadLine());
 
-                Console.Write("\t"+startVertex.Name + "\t   -->\t\t" + endVertex.Name + "\t\t\t");
-                var path = dijkstra.FindShortestPath(startVertex, endVertex);
-                var range = dijkstra.GetRange(path);
-                Console.Write(range.ToString()+"\t\t");
-                foreach (var v in path)
+                Console.WriteLine("Початкова вершина\tКінцева вершина\t\tДовжина маршруту\tМаршрут");
+                foreach (var endVertex in g.Vertices)
                 {
-                    Console.Write(v + " ");
+                    if (endVertex == startVertex) continue;
+
+                    Console.Write("\t" + startVertex.Name + "\t   -->\t\t" + endVertex.Name + "\t\t\t");
+                    var path = dijkstra.FindShortestPath(startVertex, endVertex);
+                    var range = dijkstra.GetRange(path);
+                    Console.Write(range.ToString() + "\t\t");
+                    foreach (var v in path)
+                    {
+                        Console.Write(v + " ");
+                    }
+                    Console.WriteLine();
                 }
-                Console.WriteLine();            
-            }   
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+
+                Console.Write("Ведіть вершину до якої застосувати багатошляхову маршрутизацію: ");
+                var lastVertex = g.FindVertex(Console.ReadLine());
+                var allPathes = DFS_Class.DFS(g, startVertex, lastVertex);
+                var sortedPathes = allPathes.OrderBy(x => x.Value);
+
+                Console.WriteLine("Початкова вершина\tКінцева вершина\t\tДовжина маршруту\tМаршрут");
+                foreach (var path in sortedPathes)
+                {
+                    Console.Write("\t" + startVertex.Name + "\t   -->\t\t" + lastVertex.Name + "\t\t\t");
+                    Console.Write(path.Value.ToString() + "\t\t");
+                    foreach (var v in path.Key)
+                    {
+                        Console.Write(v + " ");
+                    }
+                    Console.WriteLine();
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+            }
         }
     }
 }
